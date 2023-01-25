@@ -6,6 +6,7 @@ using Crawler.Services;
 
 namespace Crawler.Controllers;
 
+[Authorize]
 [Route("api/doctors")]
 [ApiController]
 public class DoctorsController : ControllerBase

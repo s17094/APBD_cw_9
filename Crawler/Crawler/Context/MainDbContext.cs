@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
 using Crawler.Models;
+using Crawler.Models.Security;
 
 namespace Crawler.Context;
 
@@ -21,6 +22,7 @@ public class MainDbContext : DbContext
     public virtual DbSet<Patient> Patients { get; set; }
     public virtual DbSet<Prescription> Prescriptions { get; set; }
     public virtual DbSet<PrescriptionMedicament> PrescriptionMedicaments { get; set; }
+    public virtual DbSet<User> Users { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

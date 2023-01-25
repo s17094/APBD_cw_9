@@ -1,7 +1,9 @@
 using System.Text;
 using Crawler.Context;
 using Crawler.Filters;
+using Crawler.Middlewares;
 using Crawler.Services;
+using Crawler.Services.Security;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -18,6 +20,7 @@ builder.Services.AddDbContext<MainDbContext>(option =>
         .UseSqlServer(configuration.GetConnectionString("ProductionDb"));
 });
 
+builder.Services.AddScoped<IAccountsService, AccountsService>();
 builder.Services.AddScoped<IDoctorsService, DoctorsService>();
 builder.Services.AddScoped<IPrescriptionService, PrescriptionService>();
 
@@ -43,8 +46,8 @@ builder.Services.AddAuthentication(options =>
         ValidateAudience = true,
         ValidateLifetime = true,
         ClockSkew = TimeSpan.FromMinutes(2),
-        ValidIssuer = "https://localhost:5001", // edit
-        ValidAudience = "https://localhost:5001", // edit
+        ValidIssuer = configuration["Host"],
+        ValidAudience = configuration["Host"],
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["SecretKey"]))
     };
 
@@ -74,6 +77,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseErrorLogging();
 
 app.UseHttpsRedirection();
 
